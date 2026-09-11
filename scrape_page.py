@@ -3,14 +3,14 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 
-def page_scraper(url):
+def page_scraper(url, session):
     articles = []
-
+   
     try:
-        response = requests.get(url, timeout=10)
+        response = session.get(url, timeout=10)
         response.raise_for_status()  
-    except requests.RequestException as e:
-        raise Exception(f"Error fetching the URL: {url}. Error: {e}") from e
+    except requests.HTTPError:
+        raise
 
     soup = BeautifulSoup(response.text, "html.parser")
     title_lines = soup.find_all("span", class_="titleline")
